@@ -4,7 +4,7 @@
 // (initServiceWorker(), #app-update-banner, "SKIP_WAITING" message) has something real to talk
 // to. Bump CACHE_NAME whenever the cached files below change so browsers pick up the new
 // version - that's what makes the "새 버전이 준비됐어요" banner appear.
-const CACHE_NAME = 'zone-align-ai-v9';
+const CACHE_NAME = 'zone-align-ai-v2';
 const APP_SHELL = [
   './',
   './index.html',
@@ -36,20 +36,6 @@ self.addEventListener('message', (event) => {
   if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
-// Files whose staleness has repeatedly caused "the fix doesn't show up" reports: index.html and
-// breathing-engine.js are exactly the files that change every time a bug gets fixed, and under a
-// pure cache-first strategy a stale copy of just these two silently overrides every future
-// deploy until the user notices and clicks the update banner - which is easy to miss, especially
-// on an installed PWA that's rarely fully closed. Serving these NETWORK-FIRST (falling back to
-// cache only when actually offline) means an online user always gets the latest app code on
-// their very next load, with no banner click required - CACHE_NAME bumps and the banner still
-// matter for genuinely offline use, but they're no longer the only thing standing between a fix
-// and the user seeing it.
-function isAppShellCode(url, req) {
-  if (req.mode === 'navigate') return true;
-  return url.pathname.endsWith('/index.html') || url.pathname.endsWith('/breathing-engine.js');
-}
-
 self.addEventListener('fetch', (event) => {
   const req = event.request;
   // Only GET requests are cacheable at all; POST (the /api/* calls this app makes) must always
@@ -62,21 +48,6 @@ self.addEventListener('fetch', (event) => {
   // their error handling) stay live, even if the app shell is served from cache.
   if (url.pathname.startsWith('/api/')) return;
 
-  if (isAppShellCode(url, req)) {
-    event.respondWith(
-      fetch(req).then((res) => {
-        if (res && res.ok) {
-          const copy = res.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(req, copy));
-        }
-        return res;
-      }).catch(() => caches.match(req)),
-    );
-    return;
-  }
-
-  // Cache-first for everything else (icons, manifest.json) - static assets that rarely change,
-  // where instant-from-cache loading is worth more than always re-fetching.
   event.respondWith(
     caches.match(req).then((cached) => {
       if (cached) return cached;

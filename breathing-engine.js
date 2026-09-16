@@ -118,27 +118,6 @@
   var MIN_PEAK_THRESHOLD_MULTIPLIER = 1.25; // floor for the relaxed multiplier, unvalidated -
   // still requires a real, if modest, rise above the tracked noise floor even at full relaxation.
 
-  // Re-arm hysteresis (see the "armed" gate in BreathingDetector.pushFrame). Without this, a
-  // breath was "confirmed" the instant normalizedRms crossed above threshold, gated only by the
-  // fixed BREATH_REFRACTORY_MS timer - with no requirement that the signal ever actually quieted
-  // down again first. A real breath cycle has two separate loud stretches (inhale, then exhale)
-  // with a quieter gap between them; a fixed-time-only refractory (1200ms) is shorter than that
-  // gap at any normal breathing rate, so BOTH the inhale and the exhale get confirmed as separate
-  // "breaths" - roughly doubling the reported rate. This is not a hypothetical: Nam, Reyes & Chon
-  // ("Estimation of Respiratory Rates Using the Built-in Microphone of a Smartphone or Headset",
-  // IEEE J. Biomedical and Health Informatics, 2016, PMID 26415194) report the same failure mode
-  // from a different trigger (nasal congestion), explicitly describing it as "doubling of the
-  // respiratory rate" - the general lesson (a naive threshold-crossing counts sub-cycle events,
-  // not full breaths) is standard peak-detection practice (Schmitt-trigger / hysteresis gating).
-  // Requiring the signal fall back below REARM_RMS_FRACTION x threshold before the next
-  // confirmation can fire forces each confirmation to correspond to a genuinely separate loud
-  // stretch. REARM_STALE_MS is a fallback only, in case the signal never quiets back down (e.g.
-  // continuous background noise) - it forces re-arming anyway after a few refractory periods so
-  // detection cannot lock up permanently; this fallback duration itself is an engineering choice,
-  // not from the cited literature.
-  var REARM_RMS_FRACTION = 0.6;
-  var REARM_STALE_MS = BREATH_REFRACTORY_MS * 3;
-
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   function mean(arr) { return arr.length ? arr.reduce(function (a, b) { return a + b; }, 0) / arr.length : 0; }
   function stdDev(arr) {
@@ -397,7 +376,6 @@
     this.confirmedAmplitudes = []; // normalized RMS at each confirmed breath, for live SNR
     this.lastEventTs = null;
     this.lastFrameTs = null;
-    this.armed = true; // see REARM_RMS_FRACTION/REARM_STALE_MS above
     this.hadRecentDropout = false;
     this.zcrPeakTimestamps = []; // for speech-rate heuristic
     // m/s^2 above baseline; initial engineering value, unvalidated. Raised from an earlier 1.5
@@ -444,7 +422,6 @@
       this.longIntervals = [];
       this.confirmedAmplitudes = [];
       this.lastEventTs = null;
-      this.armed = true;
     }
     this.lastFrameTs = now;
 
@@ -505,14 +482,9 @@
     // happens to coincide with motion - that combined judgment is what should gate confirmation,
     // not motion alone. motionSpiking is still tracked (below) for the quality score's
     // motionArtifactRatio penalty.
-    // this.armed additionally requires the signal to have quieted back down since the last
-    // confirmed breath (see REARM_RMS_FRACTION above) - without it, a single breath's inhale AND
-    // exhale (two separate loud stretches BREATH_REFRACTORY_MS apart at any normal breathing
-    // rate) each get confirmed as their own breath, roughly doubling the reported rate.
-    if (!artifact && normalizedRms > threshold && this.armed
+    if (!artifact && normalizedRms > threshold
       && (this.lastEventTs == null || now - this.lastEventTs > BREATH_REFRACTORY_MS)) {
       confirmedBreath = true;
-      this.armed = false;
       if (this.lastEventTs != null) {
         this.longIntervals.push(now - this.lastEventTs);
         if (this.longIntervals.length > LONG_INTERVAL_HISTORY) this.longIntervals.shift();
@@ -522,10 +494,6 @@
       if (this.eventTimestamps.length > MAX_BREATH_HISTORY) this.eventTimestamps.shift();
       this.confirmedAmplitudes.push(normalizedRms);
       if (this.confirmedAmplitudes.length > LONG_INTERVAL_HISTORY) this.confirmedAmplitudes.shift();
-    }
-    if (!this.armed && (normalizedRms < threshold * REARM_RMS_FRACTION
-      || (this.lastEventTs != null && now - this.lastEventTs > REARM_STALE_MS))) {
-      this.armed = true;
     }
 
     this.previousRms = normalizedRms;

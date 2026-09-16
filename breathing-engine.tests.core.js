@@ -230,43 +230,6 @@
       assertOk(firstBpmAtMs != null, 'a real (if weak) breathing signal must eventually produce a breaths/min number, not stay "--" forever');
     });
 
-    log('1d) 회귀 테스트: 들숨/날숨이 각각 크게 들리면 호흡수가 2배로 잡히면 안 됨');
-    test('a continuously loud breath envelope (inhale+exhale both above threshold) is not double-counted', function () {
-      // Reproduces a real bug: the old code confirmed a breath the instant normalizedRms crossed
-      // above threshold, gated only by a fixed time-based refractory (BREATH_REFRACTORY_MS) - with
-      // no requirement that the signal ever quiet back down first. generateFrames()'s 30%-duty
-      // synthetic pulse happened not to trigger this, but a real breath's loudness envelope is
-      // continuous across the WHOLE cycle (rising through inhale, falling through exhale, no
-      // silent gap) and can sit above threshold for well over BREATH_REFRACTORY_MS at normal
-      // breathing rates - confirming twice (once on the way up, once BREATH_REFRACTORY_MS later
-      // while still above threshold) for every one real breath, roughly doubling the reported
-      // rate. This exact failure mode (rate doubling) is documented in Nam, Reyes & Chon, "Estimation
-      // of Respiratory Rates Using the Built-in Microphone of a Smartphone or Headset", IEEE J.
-      // Biomedical and Health Informatics, 2016 (PMID 26415194), from a different trigger (nasal
-      // congestion) - the general lesson that a naive threshold-crossing counts sub-cycle events,
-      // not full breaths, is the motivation for the armed/re-arm hysteresis gate this test covers.
-      const breathsPerMin = 12;
-      const cycleMs = 60000 / breathsPerMin;
-      const ambientRms = 0.01;
-      const amplitude = 0.15;
-      function continuousEnvelopeFrames(durationMs, seed) {
-        const rng = makeRng(seed);
-        const frames = [];
-        for (let t = 0; t < durationMs; t += 33) {
-          const envelope = 0.5 * (1 - Math.cos((2 * Math.PI * t) / cycleMs)); // 0..1, continuous, no silent gap
-          const rms = ambientRms + envelope * amplitude + (rng() - 0.5) * ambientRms * 0.2;
-          frames.push({ rms: Math.max(0, rms), zcr: 0.12, clippingRatio: 0, motionMagnitude: 0.1, timestampMs: t });
-        }
-        return frames;
-      }
-      const calib = continuousEnvelopeFrames(5000, 301);
-      const main = continuousEnvelopeFrames(30000, 302);
-      const r = runCalibrationAndDetector('wired', calib, main);
-      assertOk(r.quality.breathsPerMin != null, 'should detect a rate');
-      assertOk(Math.abs(r.quality.breathsPerMin - breathsPerMin) < 4,
-        'rate should be roughly ' + breathsPerMin + '/min, got ' + r.quality.breathsPerMin + ' (a value near ' + (breathsPerMin * 2) + ' means inhale+exhale are being double-counted)');
-    });
-
     log('10) 신호가 5초 이상 끊기는 경우');
     test('signal dropout >5s is detected and marks status UNAVAILABLE right after resuming', function () {
       const calib = generateFrames({ breathsPerMin: 15, ambientRms: 0.01, breathAmplitude: 0.08, durationMs: 5000, seed: 18 });

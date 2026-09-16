@@ -269,18 +269,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
 .bar.fat { background: var(--accent-red); }
 
 /* Exercise View */
-/* Bug this fixes (the real cause behind repeated "메트로놈/Zone2 안 보임" reports): this container
-   is `.content-scroll`'s flex box, which scrolls (overflow-y: auto) whenever its content is taller
-   than the viewport. `justify-content: center` on a flex column has NO visible effect while content
-   is shorter than the box (the idle/pre-start exercise screen, with its many setup cards, easily
-   exceeds 70vh, so this looked harmless for months) - but the moment content grows past the box's
-   height while RUNNING (breathing-status-panel appearing, then again once "상세 신호 정보" is
-   opened, adding ~300px), centering pushes roughly half the overflow ABOVE the scrollable area.
-   That region is not just off-screen - `scrollTop` cannot go negative, so there is no way to
-   scroll up far enough to reach it. The BPM circle and "호흡 기반 호흡수 추정" number are the
-   first children, so they were exactly what disappeared - looking indistinguishable from "the
-   metronome/Zone2 feature is broken" even though every number underneath was computing correctly. */
-.exercise-container { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; min-height: 70vh; }
+.exercise-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 70vh; }
 .heart-rate-monitor {
     position: relative; width: 200px; height: 200px;
     display: flex; align-items: center; justify-content: center; margin-bottom: 40px;
@@ -616,7 +605,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
 .diet-slot { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 12px; padding: 15px 6px; display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
 .diet-slot:hover { border-color: var(--accent-green); }
 .diet-slot i { color: var(--text-secondary); }
-.diet-slot .meal-emoji { font-size: 1.5rem; line-height: 1; }
 .diet-slot span { font-size: 0.875rem; font-weight: 500; }
 .diet-kcal { font-size: 0.8rem; color: var(--text-secondary); }
 .diet-slot.recorded { border-color: var(--accent-green); background: rgba(34, 197, 94, 0.1); }
@@ -703,7 +691,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
 .home-diet-meal-item { background: rgba(0,0,0,0.2); border: 1px solid var(--card-border); border-radius: 12px; padding: 12px 4px; display: flex; flex-direction: column; align-items: center; gap: 6px; }
 .home-diet-meal-item i { width: 18px; height: 18px; color: var(--text-secondary); }
 .home-diet-meal-item.has-food i { color: var(--accent-green); }
-.home-diet-meal-item .meal-emoji { font-size: 1.3rem; line-height: 1; }
 .home-diet-meal-label { font-size: 0.75rem; color: var(--text-secondary); }
 .home-diet-meal-kcal { font-size: 0.8rem; font-weight: 700; color: var(--text-primary); }
 .home-diet-meal-kcal::after { content: ' kcal'; font-weight: 500; color: var(--text-secondary); font-size: 0.7rem; }
@@ -862,7 +849,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
                 <header class="app-header">
                     <div>
                         <p class="greeting" id="home-greeting">안녕하세요, User님 👋</p>
-                        <h1 class="page-title">💚 오늘의 Zone 2 상태</h1>
+                        <h1 class="page-title">오늘의 Zone 2 상태</h1>
                     </div>
                     <div style="display: flex; gap: 12px;">
                         <div class="header-icon-labeled">
@@ -896,7 +883,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
                     <!-- Progress Card -->
                     <div class="glass-card premium-gradient-card">
                         <div class="card-header">
-                            <h2>🏃 오늘의 운동 현황</h2>
+                            <h2>오늘의 운동 현황</h2>
                             <span class="status-badge green" id="home-status-badge">시작 전</span>
                         </div>
                         <div class="progress-ring-container">
@@ -912,28 +899,28 @@ p { color: var(--text-secondary); line-height: 1.5; }
 
                     <!-- Live Today's Diet Summary -->
                     <div class="flex-row" style="margin: 24px 0 12px 0;">
-                        <h3 class="section-title" style="margin: 0;">🍽️ 오늘의 식단</h3>
+                        <h3 class="section-title" style="margin: 0;">오늘의 식단</h3>
                         <span class="text-muted" style="font-size: 0.8rem;">실시간 업데이트</span>
                     </div>
                     <div class="glass-card mb-20" id="home-diet-card">
                         <div class="home-diet-meals" id="home-diet-meals">
                             <div class="home-diet-meal-item" id="home-diet-breakfast" data-meal="breakfast">
-                                <span class="meal-emoji" aria-hidden="true">🌅</span>
+                                <i data-lucide="sun"></i>
                                 <span class="home-diet-meal-label">아침</span>
                                 <span class="home-diet-meal-kcal" id="home-kcal-breakfast">0</span>
                             </div>
                             <div class="home-diet-meal-item" id="home-diet-lunch" data-meal="lunch">
-                                <span class="meal-emoji" aria-hidden="true">🍱</span>
+                                <i data-lucide="cloud-sun"></i>
                                 <span class="home-diet-meal-label">점심</span>
                                 <span class="home-diet-meal-kcal" id="home-kcal-lunch">0</span>
                             </div>
                             <div class="home-diet-meal-item" id="home-diet-dinner" data-meal="dinner">
-                                <span class="meal-emoji" aria-hidden="true">🌙</span>
+                                <i data-lucide="moon"></i>
                                 <span class="home-diet-meal-label">저녁</span>
                                 <span class="home-diet-meal-kcal" id="home-kcal-dinner">0</span>
                             </div>
                             <div class="home-diet-meal-item" id="home-diet-snack" data-meal="snack">
-                                <span class="meal-emoji" aria-hidden="true">🍪</span>
+                                <i data-lucide="cookie"></i>
                                 <span class="home-diet-meal-label">간식</span>
                                 <span class="home-diet-meal-kcal" id="home-kcal-snack">0</span>
                             </div>
@@ -955,7 +942,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
             <section id="view-exercise" class="view">
                 <header class="app-header center">
                     <div style="width: 24px;"></div>
-                    <h1 class="page-title">🏃 Zone 2 트레이닝</h1>
+                    <h1 class="page-title">Zone 2 트레이닝</h1>
                     <button class="icon-btn btn-voice-help" data-view="exercise" aria-label="화면 설명 듣기" title="화면 설명 듣기"><i data-lucide="info"></i></button>
                 </header>
                 <div class="content-scroll exercise-container">
@@ -1003,14 +990,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
                         <div id="breathing-metronome-ring" class="hidden breathing-metronome-ring">
                             <span id="breathing-metronome-label">들이쉬기</span>
                         </div>
-                        <!-- Mid-workout metronome on/off (independent of the metronomeEnabled setting
-                             chosen before starting): lets the user turn the pacing aid on or off at
-                             any point during a breathing-mode session, not just before starting one.
-                             See toggleMetronomeMidExercise() - it starts/stops startMetronome()/
-                             stopMetronome() directly and keeps state.settings.metronomeEnabled (and
-                             therefore the setup-screen checkbox) in sync, so the two controls never
-                             disagree about whether the metronome is currently on. -->
-                        <button type="button" id="breathing-metronome-toggle-btn" style="background: rgba(255,255,255,0.08); border: 1px solid var(--card-border); color: var(--text-primary); font-size: 0.8rem; border-radius: 10px; padding: 8px 14px; margin-top: 10px; cursor: pointer;">🔊 메트로놈 켜기</button>
                         <!-- Raw diagnostic readout - hidden by default, toggled by the tester. If a
                              number still never appears despite everything above, this is what shows
                              WHY (current level vs. detection threshold, what's being classified as an
@@ -1090,8 +1069,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
                             <p style="margin: 0 0 6px;"><strong style="color:var(--text-primary);">1) 호흡(환기)은 운동 강도를 심박수만큼, 때로는 심박수보다 더 잘 반영합니다</strong> — 가벼운~중간 강도 운동에서 산소섭취량(VO₂) 대비 상관계수(r²)가 환기량 0.87~0.91, 심박수 0.50~0.83로 보고되었습니다 (Gastinger et al., <em>Journal of Sports Science and Medicine</em> 9, 2010, 110–118, PMID 24149394). 이 논문은 호흡을 측정하는 이유에 대한 근거이며, 아래 계산식의 구체적 수치를 제공하지는 않습니다.</p>
                             <p style="margin: 0 0 6px;"><strong style="color:var(--text-primary);">2) 이 앱이 실제 계산에 사용하는 유일한 기준점</strong>: 첫 환기역치(VT-1, "편하게 대화 가능"에서 "약간 힘듦"으로 바뀌는 지점)의 호흡수는 분당 22~25회(VO₂peak의 약 57~60%)로 측정되었습니다 (Buckley, Terada, Lion & Reed, <em>European Journal of Applied Physiology</em> 124(10), 2024, 2881–2891). 이 앱은 이 절대 수치를 사용자 본인의 실측 안정 시 호흡수와 비교해 "안정 시=0%, VT-1=약 58.5% 심박수 여유(HRR)"인 2점 직선 모델을 만들고, 그 이상 구간은 같은 기울기로 선형 외삽(95%에서 상한)합니다. <u>이 곡선의 구체적 형태(직선, 95% 상한 등)는 논문이 제시한 것이 아니라 이 앱이 그 한 지점을 바탕으로 직접 설계한 것</u>이며, 그 이상의 강도 구간에 대한 데이터는 어떤 논문에도 없습니다.</p>
                             <p style="margin: 0 0 6px;"><strong style="color:var(--text-primary);">3) 휴대폰/이어폰 마이크로 호흡음을 분석해 호흡수를 측정하는 방식</strong> 자체도 검증된 방법입니다 (Nam, Reyes & Chon, <em>IEEE J. Biomedical and Health Informatics</em>, 2016, PMID 26415194; Doheny et al., <em>Biomedical Signal Processing and Control</em> 80, 2023, 104318). 이 두 논문 역시 호흡수-심박수 환산 수치를 제공하지는 않으며, 마이크 기반 측정 방식 자체의 타당성 근거로만 쓰였습니다.</p>
-                            <p style="margin: 0 0 6px; color: var(--accent-blue);">단, 호흡은 심박수를 박동 단위로 조절하긴 하지만(호흡동성부정맥), 학계에서는 반대로 <strong>심박변이도에서 호흡수를 추출</strong>하는 연구가 대부분이며, 호흡수만으로 정확한 BPM을 역산하는 공인된 공식은 없습니다(Prigent et al., <em>Sensors</em> 21(16), 2021, 5651, 이 방향은 "이론적으로 타당하지 않다"고 명시). 그래서 이 화면의 심박수는 항상 <strong>"Zone 추정치"</strong>이며 실제 심박센서로 측정한 값이 아닙니다.</p>
-                            <p style="margin: 8px 0 0; padding-top: 8px; border-top: 1px solid rgba(59,130,246,0.25);"><strong style="color:var(--text-primary);">4) 기기(줄 이어폰/무선 이어폰/헤드셋/휴대폰)별 오차 대응 — 2026-09 업데이트:</strong> 사용자 보고로 반복된 "호흡수가 실제보다 훨씬 높게 잡힌다"는 오류를 점검한 결과, 들숨과 날숨이 각각 크게 들릴 만큼 신호가 좋을 때(특히 마이크가 입에 가까운 줄 이어폰·헤드셋에서 자주 발생) 들숨 1회+날숨 1회가 서로 다른 두 번의 호흡으로 이중 계산되어 호흡수가 실제의 약 2배로 표시되는 버그를 발견해 수정했습니다. 이 실패 유형(원인은 다르지만 "호흡수가 2배로 잡힘") 자체는 Nam, Reyes & Chon(2016, 위 인용)도 비강 호흡음 분석에서 보고한 바 있어, 신호를 한 번 확인 후 다시 조용해져야만 다음 호흡을 인정하도록(하강 후 재-무장, 표준 피크 검출 기법) 바꿔 해결했습니다. 같은 논문은 또한 "휴대폰 마이크가 코에서 30cm 떨어져 있어도 호흡수 추정 오차가 median 1% 미만"이라고 보고해, 무선 이어폰·휴대폰처럼 마이크가 입에서 먼 기기도 <em>거리 자체보다는 주변 소음</em>이 더 큰 오차 요인임을 뒷받침합니다 — 이 앱이 기기별로 다른 소음 바닥값(noise floor)·임계값을 쓰는 이유입니다. 다만 기기별 정확한 임계값 수치 자체는 이 논문들이 제시한 것이 아니라 이 앱이 설계한 엔지니어링 값이며, 실사용 데이터로 계속 조정되어야 합니다.</p>
+                            <p style="margin: 0; color: var(--accent-blue);">단, 호흡은 심박수를 박동 단위로 조절하긴 하지만(호흡동성부정맥), 학계에서는 반대로 <strong>심박변이도에서 호흡수를 추출</strong>하는 연구가 대부분이며, 호흡수만으로 정확한 BPM을 역산하는 공인된 공식은 없습니다(Prigent et al., <em>Sensors</em> 21(16), 2021, 5651, 이 방향은 "이론적으로 타당하지 않다"고 명시). 그래서 이 화면의 심박수는 항상 <strong>"Zone 추정치"</strong>이며 실제 심박센서로 측정한 값이 아닙니다.</p>
                         </div>
 
                         <!-- Breathing metronome settings (breathing mode only). Purely a pacing aid for
@@ -1143,7 +1121,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
                     </div>
 
                     <div id="exercise-btn-group-start">
-                        <button class="primary-btn w-100 mt-15" id="exercise-start-btn" style="background: var(--accent-green);">🏃‍♂️ 운동 시작</button>
+                        <button class="primary-btn w-100 mt-15" id="exercise-start-btn" style="background: var(--accent-green);">운동 시작</button>
                     </div>
                     
                     <div id="exercise-btn-group-running" class="hidden" style="display: flex; flex-direction: column; gap: 10px; width: 100%;">
@@ -1179,7 +1157,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
             <section id="view-diet" class="view">
                 <header class="app-header center">
                     <div style="width: 24px;"></div>
-                    <h1 class="page-title">🍽️ 내 식단 관리</h1>
+                    <h1 class="page-title">내 식단 관리</h1>
                     <button class="icon-btn btn-voice-help" data-view="diet" aria-label="화면 설명 듣기" title="화면 설명 듣기"><i data-lucide="info"></i></button>
                 </header>
                 <div class="content-scroll">
@@ -1187,22 +1165,22 @@ p { color: var(--text-secondary); line-height: 1.5; }
                     <p class="text-muted mb-20" style="font-size: 0.875rem;">각 끼니를 선택하여 음식을 여러 개 추가하거나 삭제할 수 있습니다.</p>
                     <div class="diet-tracker-grid">
                         <div class="diet-slot" id="diet-breakfast">
-                            <span class="meal-emoji" aria-hidden="true">🌅</span>
+                            <i data-lucide="sun"></i>
                             <span>아침</span>
                             <span class="diet-kcal" id="kcal-breakfast">0 kcal</span>
                         </div>
                         <div class="diet-slot" id="diet-lunch">
-                            <span class="meal-emoji" aria-hidden="true">🍱</span>
+                            <i data-lucide="cloud-sun"></i>
                             <span>점심</span>
                             <span class="diet-kcal" id="kcal-lunch">0 kcal</span>
                         </div>
                         <div class="diet-slot" id="diet-dinner">
-                            <span class="meal-emoji" aria-hidden="true">🌙</span>
+                            <i data-lucide="moon"></i>
                             <span>저녁</span>
                             <span class="diet-kcal" id="kcal-dinner">0 kcal</span>
                         </div>
                         <div class="diet-slot" id="diet-snack">
-                            <span class="meal-emoji" aria-hidden="true">🍪</span>
+                            <i data-lucide="cookie"></i>
                             <span>간식</span>
                             <span class="diet-kcal" id="kcal-snack">0 kcal</span>
                         </div>
@@ -1263,7 +1241,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
             <!-- 5. Profile View -->
             <section id="view-profile" class="view">
                 <header class="app-header">
-                    <h1 class="page-title">👤 내 프로필</h1>
+                    <h1 class="page-title">내 프로필</h1>
                     <button class="icon-btn btn-voice-help" data-view="profile" aria-label="화면 설명 듣기" title="화면 설명 듣기"><i data-lucide="info"></i></button>
                 </header>
                 <div class="content-scroll">
@@ -1299,14 +1277,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
                                 <label for="profile-name">이름 (선택)</label>
                                 <input type="text" id="profile-name" disabled>
                             </div>
-                            <div class="form-group">
-                                <label for="profile-weight">체중 (kg)</label>
-                                <input type="number" id="profile-weight" min="20" max="300" step="0.1" inputmode="decimal" disabled>
-                            </div>
-                            <div class="form-group">
-                                <label for="profile-target-weight">목표 체중 변화 (kg) <span class="text-muted" style="font-weight: 400;">— 감량은 음수(예: -5), 증량은 양수로</span></label>
-                                <input type="number" id="profile-target-weight" step="0.1" inputmode="decimal" disabled>
-                            </div>
                             <div class="checkbox-group mt-15 disabled-checkbox" id="profile-keep-login-group">
                                 <input type="checkbox" id="profile-keep-login" disabled>
                                 <label for="profile-keep-login">로그인 항상 유지</label>
@@ -1338,6 +1308,24 @@ p { color: var(--text-secondary); line-height: 1.5; }
                         <button class="primary-btn w-100" id="btn-open-records" style="background: var(--card-border); color: var(--text-primary); border: 1px solid var(--text-secondary);">전체 기록 열람하기</button>
                     </div>
 
+                    <h3 class="section-title mt-20">건강 설정</h3>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <i data-lucide="activity"></i>
+                                <span>질환 정보 (고혈압 등)</span>
+                            </div>
+                            <i data-lucide="chevron-right"></i>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <i data-lucide="coffee"></i>
+                                <span>식이 선호도</span>
+                            </div>
+                            <i data-lucide="chevron-right"></i>
+                        </div>
+                    </div>
+
                     <!-- The "AI 식단 분석 설정" card (personal Gemini API key input, model field,
                          and "키 발급받기" link/instructions) has been removed on purpose. Food-photo
                          analysis is now always handled by this app's own /api/analyze-food
@@ -1364,7 +1352,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
             <!-- 5.5 Post-Workout View (Ambient Display) -->
             <section id="view-post-workout" class="view hidden">
                 <header class="app-header center">
-                    <h1 class="page-title">🏆 오늘의 성취</h1>
+                    <h1 class="page-title">오늘의 성취</h1>
                 </header>
                 <div class="content-scroll" style="display: flex; flex-direction: column; align-items: center; text-align: center;">
                     
@@ -1414,7 +1402,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
             <section id="view-calendar" class="view">
                 <header class="app-header">
                     <div style="width: 24px;"></div>
-                    <h1 class="page-title">📅 내 기록 달력</h1>
+                    <h1 class="page-title">내 기록 달력</h1>
                     <button class="icon-btn btn-voice-help" data-view="calendar" aria-label="화면 설명 듣기" title="화면 설명 듣기"><i data-lucide="info"></i></button>
                 </header>
                 <div class="content-scroll">
@@ -1436,7 +1424,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
             <section id="view-records" class="view">
                 <header class="app-header" style="justify-content: flex-start; gap: 14px;">
                     <button class="icon-btn scan-back-btn" id="btn-back-profile" aria-label="뒤로 가기"><i data-lucide="arrow-left"></i><span>뒤로</span></button>
-                    <h1 class="page-title">📋 모든 기록 리스트</h1>
+                    <h1 class="page-title">모든 기록 리스트</h1>
                 </header>
                 <div class="content-scroll" id="records-list-container">
                     <!-- 기록 목록 렌더링 -->
@@ -1650,55 +1638,10 @@ p { color: var(--text-secondary); line-height: 1.5; }
                         <i data-lucide="mic" style="color: var(--accent-red);"></i> 음성 입력
                     </button>
                 </div>
-                <!-- Manual entry: type the food name/grams/kcal/macros directly, with no search
-                     lookup or AI involved - for foods the local DB and AI fallback don't have, or
-                     when the user already knows the exact numbers (e.g. from a package label). -->
-                <button class="primary-btn w-100 mt-15" id="btn-input-manual" style="background: rgba(255,255,255,0.1); border: 1px solid var(--card-border); color: #fff; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                    <i data-lucide="pencil" style="color: var(--text-secondary);"></i> 직접 입력
-                </button>
                 <button class="primary-btn w-100 mt-20" id="btn-close-input-modal" style="background: #334155;">취소</button>
             </div>
         </div>
         <input type="file" id="gallery-upload" accept="image/*" class="hidden">
-
-        <!-- Manual Diet Entry Modal (직접 입력): name/grams/kcal/macros typed in directly, no
-             search or AI lookup - see btn-input-manual above. -->
-        <div id="manual-diet-modal" class="hidden" style="position: fixed; inset: 0; isolation: isolate; z-index: 2100; background: rgb(5,8,15); display: flex; align-items: center; justify-content: center; padding: 20px;">
-            <div class="glass-card" style="width: 100%; max-width: 360px; padding: 25px 20px; max-height: 85vh; overflow-y: auto;">
-                <div class="flex-row mb-15">
-                    <h3>직접 입력</h3>
-                    <button class="icon-btn" id="btn-close-manual-diet" aria-label="닫기" title="닫기"><i data-lucide="x"></i></button>
-                </div>
-                <div class="form-group">
-                    <label for="manual-diet-name">음식 이름</label>
-                    <input type="text" id="manual-diet-name" placeholder="예: 닭가슴살 샐러드">
-                </div>
-                <div class="form-group">
-                    <label for="manual-diet-qty">양 (g)</label>
-                    <input type="number" id="manual-diet-qty" min="0" step="1" inputmode="numeric" placeholder="예: 150">
-                </div>
-                <div class="form-group">
-                    <label for="manual-diet-kcal">칼로리 (kcal)</label>
-                    <input type="number" id="manual-diet-kcal" min="0" step="1" inputmode="numeric" placeholder="예: 250">
-                </div>
-                <div class="flex-row" style="gap: 10px; align-items: flex-start;">
-                    <div class="form-group" style="flex: 1;">
-                        <label for="manual-diet-protein">단백질 (g)</label>
-                        <input type="number" id="manual-diet-protein" min="0" step="0.1" placeholder="0">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label for="manual-diet-carbs">탄수화물 (g)</label>
-                        <input type="number" id="manual-diet-carbs" min="0" step="0.1" placeholder="0">
-                    </div>
-                    <div class="form-group" style="flex: 1;">
-                        <label for="manual-diet-fat">지방 (g)</label>
-                        <input type="number" id="manual-diet-fat" min="0" step="0.1" placeholder="0">
-                    </div>
-                </div>
-                <p class="text-muted" style="font-size: 0.78rem; margin: 0 0 10px;">단백질/탄수화물/지방은 몰라도 괜찮아요 - 비워두면 0으로 기록됩니다.</p>
-                <button class="primary-btn w-100" id="btn-manual-diet-add">식단에 추가</button>
-            </div>
-        </div>
 
         <!-- Exercise Record Detail Modal (tap any item in "모든 기록 리스트" to reopen its full
              post-workout result - avg/max/min BPM, Zone 2 유지율, measurement method, RPE - so nothing
@@ -1790,7 +1733,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
      between them. This forces every OTHER tracked overlay closed whenever one
      of them opens, while still allowing the one intentional stack (meal-detail
      -> diet-input -> food-search) to work as designed. */
-  var ALL_OVERLAY_IDS = ['dtt-modal', 'daily-summary-modal', 'meal-detail-modal', 'food-search-modal', 'diet-input-modal', 'manual-diet-modal', 'record-detail-modal', 'daily-record-detail-modal'];
+  var ALL_OVERLAY_IDS = ['dtt-modal', 'daily-summary-modal', 'meal-detail-modal', 'food-search-modal', 'diet-input-modal', 'record-detail-modal', 'daily-record-detail-modal'];
   function closeOverlay(id) { var el = document.getElementById(id); if (el) el.classList.add('hidden'); }
   function closeOtherOverlays(exceptIds) {
     ALL_OVERLAY_IDS.forEach(function (id) { if (exceptIds.indexOf(id) === -1) closeOverlay(id); });
@@ -3019,7 +2962,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
       idbPut('settings', state.settings);
     });
     on($('#metronome-sound-test-btn'), 'click', playTestMetronomeTick);
-    on($('#breathing-metronome-toggle-btn'), 'click', toggleMetronomeMidExercise);
 
     on($('#exercise-start-btn'), 'click', startExercise);
     on($('#exercise-pause-btn'), 'click', pauseExercise);
@@ -3127,7 +3069,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
   function startMetronome(b) {
     if (!state.settings || !state.settings.metronomeEnabled) return;
     stopMetronome(b); // guard against double-starting (e.g. a rapid setting change)
-    stopTestMetronomeTick(); // silence any "소리 테스트" preview still playing (see its own comment)
     ensureMetronomeAudioCtx(b);
     const bpm = clampMetronomeBpm(state.settings.metronomeBpm);
     const halfCycleMs = 30000 / bpm; // half a breath cycle (60000/bpm/2): one inhale + one exhale per full cycle
@@ -3138,16 +3079,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
       ring.style.transitionDuration = (halfCycleMs / 1000) + 's';
     }
     let phase = 'exhale'; // first tick below flips this to 'inhale', so the ring visibly moves right away
-    // Bug this fixes ("메트로놈 박자가 안 맞아"): a plain `setInterval(tick, halfCycleMs)` only
-    // schedules each firing halfCycleMs after the PREVIOUS one actually ran, so any delay in one
-    // tick (main-thread contention from the mic-analysis rAF loop doing DSP work every frame,
-    // GC pauses, background-tab throttling, etc.) permanently pushes every following tick back by
-    // that same amount - drift accumulates over the length of a workout instead of correcting
-    // itself. Scheduling against an absolute target time (startTime + tickCount * halfCycleMs)
-    // and re-deriving each setTimeout's delay from "how far away is that target now" keeps the
-    // beat locked to the real clock instead of drifting further out of tempo the longer it runs.
-    const startTime = (window.performance && performance.now) ? performance.now() : Date.now();
-    let tickCount = 0;
     const tick = () => {
       phase = phase === 'inhale' ? 'exhale' : 'inhale';
       if (ring) {
@@ -3156,48 +3087,16 @@ p { color: var(--text-secondary); line-height: 1.5; }
       }
       if (label) label.textContent = phase === 'inhale' ? '들이쉬기' : '내쉬기';
       if (state.settings.metronomeSound && b.metronomeAudioCtx) playMetronomeTick(b.metronomeAudioCtx, phase === 'inhale');
-
-      tickCount += 1;
-      const now = (window.performance && performance.now) ? performance.now() : Date.now();
-      const nextTargetAt = startTime + tickCount * halfCycleMs;
-      const delay = Math.max(0, nextTargetAt - now);
-      b.metronomeTimer = setTimeout(tick, delay);
     };
     tick(); // don't wait a full half-cycle before the very first visible/audible cue
-    updateMetronomeToggleBtnLabel();
+    b.metronomeTimer = setInterval(tick, halfCycleMs);
   }
 
   function stopMetronome(b) {
-    if (b.metronomeTimer) { clearTimeout(b.metronomeTimer); b.metronomeTimer = null; }
+    if (b.metronomeTimer) { clearInterval(b.metronomeTimer); b.metronomeTimer = null; }
     if (b.metronomeAudioCtx) { try { b.metronomeAudioCtx.close(); } catch (e) {} b.metronomeAudioCtx = null; }
     const ring = $('#breathing-metronome-ring');
     if (ring) { ring.classList.add('hidden'); ring.classList.remove('metronome-inhale', 'metronome-exhale'); }
-    updateMetronomeToggleBtnLabel();
-  }
-
-  // Reflects the metronome's actual running state (not just the metronomeEnabled setting) on the
-  // mid-workout toggle button, so it stays correct whether the metronome was started/stopped from
-  // that button, the setup-screen checkbox, or automatically via pause/resume.
-  function updateMetronomeToggleBtnLabel() {
-    const btn = $('#breathing-metronome-toggle-btn');
-    if (!btn) return;
-    const isOn = !!(state.exercise.breathing && state.exercise.breathing.metronomeTimer);
-    btn.textContent = isOn ? '🔇 메트로놈 끄기' : '🔊 메트로놈 켜기';
-  }
-
-  // Lets the user turn the metronome on or off at any point DURING a breathing-mode workout,
-  // independent of whatever state.settings.metronomeEnabled was set to before starting - see the
-  // button's own comment in the HTML. Keeps the setting (and its setup-screen checkbox) in sync so
-  // the two controls never disagree.
-  function toggleMetronomeMidExercise() {
-    const b = state.exercise.breathing;
-    const turningOn = !b.metronomeTimer;
-    state.settings.metronomeEnabled = turningOn;
-    idbPut('settings', state.settings);
-    const enabledBox = $('#metronome-enabled-checkbox');
-    if (enabledBox) enabledBox.checked = turningOn;
-    updateMetronomeControlsEnabled();
-    if (turningOn) startMetronome(b); else stopMetronome(b);
   }
 
   function clampMetronomeBpm(bpm) {
@@ -3292,16 +3191,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
       console.warn('[metronome] test tick failed', err);
       showToast('이 기기/브라우저에서 소리를 재생할 수 없어요.');
     }
-  }
-
-  // Bug this fixes ("메트로놈 소리가 중복 돼"): "소리 테스트" runs on its OWN timer/AudioContext,
-  // independent of the real session's startMetronome(). If a user starts a workout while that
-  // preview is still mid-playback (it runs for 3 full cycles, which at a slow BPM can be many
-  // seconds), the preview's ticks and the real session's ticks fire concurrently - two overlapping
-  // metronomes audibly stacked on top of each other. Stopping the preview whenever a real session
-  // starts ensures only one metronome is ever ticking at a time.
-  function stopTestMetronomeTick() {
-    if (testMetronomeTimer) { clearInterval(testMetronomeTimer); testMetronomeTimer = null; }
   }
 
   function updateHrSourceLabel(text) {
@@ -4025,39 +3914,9 @@ p { color: var(--text-secondary); line-height: 1.5; }
     on($('#btn-input-gallery'), 'click', () => { closeOtherOverlays([]); $('#gallery-upload').click(); });
     on($('#btn-input-text'), 'click', () => { $('#diet-input-modal').classList.add('hidden'); openFoodSearchModal(); });
     on($('#btn-input-voice'), 'click', () => { $('#diet-input-modal').classList.add('hidden'); openFoodSearchModal(); startVoiceSearch(); });
-    on($('#btn-input-manual'), 'click', () => { $('#diet-input-modal').classList.add('hidden'); openManualDietModal(); });
     on($('#gallery-upload'), 'change', handleGalleryUpload);
 
-    on($('#btn-close-manual-diet'), 'click', () => $('#manual-diet-modal').classList.add('hidden'));
-    on($('#btn-manual-diet-add'), 'click', submitManualDietEntry);
-
     initFoodSearchModal();
-  }
-
-  function openManualDietModal() {
-    $('#manual-diet-name').value = '';
-    $('#manual-diet-qty').value = '';
-    $('#manual-diet-kcal').value = '';
-    $('#manual-diet-protein').value = '';
-    $('#manual-diet-carbs').value = '';
-    $('#manual-diet-fat').value = '';
-    closeOtherOverlays(['diet-input-modal', 'meal-detail-modal', 'manual-diet-modal']);
-    $('#manual-diet-modal').classList.remove('hidden');
-    setTimeout(() => $('#manual-diet-name').focus(), 50);
-  }
-
-  async function submitManualDietEntry() {
-    const name = $('#manual-diet-name').value.trim();
-    const qty = Number($('#manual-diet-qty').value);
-    const kcal = Number($('#manual-diet-kcal').value);
-    if (!name) { showToast('음식 이름을 입력해주세요.'); return; }
-    if (!Number.isFinite(qty) || qty <= 0) { showToast('양(g)을 올바르게 입력해주세요.'); return; }
-    if (!Number.isFinite(kcal) || kcal < 0) { showToast('칼로리를 올바르게 입력해주세요.'); return; }
-    const protein = Number($('#manual-diet-protein').value) || 0;
-    const carbs = Number($('#manual-diet-carbs').value) || 0;
-    const fat = Number($('#manual-diet-fat').value) || 0;
-    await addDietEntry({ name, qty, unit: 'g', kcal: Math.round(kcal), protein, carbs, fat });
-    $('#manual-diet-modal').classList.add('hidden');
   }
 
   function renderDietView() {
@@ -4077,7 +3936,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
 
   function openMealDetail(meal) {
     state.dietDraft.meal = meal;
-    const titleMap = { breakfast: '🌅 아침', lunch: '🍱 점심', dinner: '🌙 저녁', snack: '🍪 간식' };
+    const titleMap = { breakfast: '아침', lunch: '점심', dinner: '저녁', snack: '간식' };
     $('#meal-detail-title').textContent = titleMap[meal] || '식단';
     renderMealDetailList();
     closeOtherOverlays(['meal-detail-modal']);
@@ -5296,7 +5155,7 @@ p { color: var(--text-secondary); line-height: 1.5; }
 
   function initProfile() {
     on($('#edit-profile-btn'), 'click', () => {
-      $all('#profile-form input[type="text"], #profile-form input[type="number"]').forEach((i) => { i.disabled = false; });
+      $all('#profile-form input[type="text"]').forEach((i) => { i.disabled = false; });
       $('#profile-keep-login').disabled = false;
       $('#profile-keep-login-group').classList.remove('disabled-checkbox');
       $('#save-profile-btn').classList.remove('hidden');
@@ -5308,12 +5167,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
       // Written only to this browser's local IndexedDB profile record - never sent anywhere.
       state.profile.name = $('#profile-name').value.trim();
       state.profile.keepLogin = $('#profile-keep-login').checked;
-      // Guard against blank/invalid number inputs overwriting a previously-saved value with 0 -
-      // only apply a field if it parsed to an actual finite number.
-      const weightVal = Number($('#profile-weight').value);
-      if (Number.isFinite(weightVal) && weightVal > 0) state.profile.weight = weightVal;
-      const targetVal = Number($('#profile-target-weight').value);
-      if (Number.isFinite(targetVal)) state.profile.targetWeight = targetVal;
       await idbPut('profile', state.profile);
       $all('#profile-form input').forEach((i) => { i.disabled = true; });
       $('#profile-keep-login-group').classList.add('disabled-checkbox');
@@ -5394,8 +5247,6 @@ p { color: var(--text-secondary); line-height: 1.5; }
     if (!state.profile) return;
     $('#profile-display-name').textContent = state.profile.name || 'User';
     $('#profile-name').value = state.profile.name || '';
-    $('#profile-weight').value = state.profile.weight ?? 72;
-    $('#profile-target-weight').value = state.profile.targetWeight ?? -5;
     $('#profile-keep-login').checked = !!state.profile.keepLogin;
     const grid = $('.stat-grid');
     if (grid) {
