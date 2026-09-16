@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>breathing-engine tests</title>
+<style>
+  body { background:#0f172a; color:#e2e8f0; font-family: ui-monospace, Consolas, monospace; padding: 16px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
+  .fail { color: #f87171; }
+  .ok { color: #34d399; }
+</style>
+</head>
+<body>
+<div id="out">running...</div>
+<script src="../breathing-engine.js"></script>
+<script src="./breathing-engine.tests.core.js"></script>
+<script>
+  var lines = [];
+  function log(line) { lines.push(line); }
+  var result = BreathingEngineTests.runAll(BreathingEngine, log);
+  document.getElementById('out').innerHTML = lines.map(function (l) {
+    var cls = l.indexOf('FAIL') === 0 ? 'fail' : (l.indexOf('ok -') === 0 ? 'ok' : '');
+    return '<div class="' + cls + '">' + l.replace(/</g, '&lt;') + '</div>';
+  }).join('');
+  console.log(lines.join('\n'));
+  window.__TEST_RESULT__ = result;
+</script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "name": "zone-align-ai",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Zone-Align AI - Zone 2 heart-rate training & diet tracker. Static frontend + a single Vercel serverless function (api/analyze-food.js) that proxies Gemini food analysis so the API key never reaches the browser.",
+  "scripts": {
+    "test": "node tests/breathing-engine.test.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

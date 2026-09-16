@@ -1,0 +1,29 @@
+﻿<!DOCTYPE html>
+<html lang="ko"><head>
+<meta charset="UTF-8">
+<title>breathing-engine tests</title>
+<style>
+  body { background:#0f172a; color:#e2e8f0; font-family: ui-monospace, Consolas, monospace; padding: 16px; white-space: pre-wrap; font-size: 13px; line-height: 1.5; }
+  .fail { color: #f87171; }
+  .ok { color: #34d399; }
+</style>
+</head>
+<body>
+<div id="out"><div class="">Device profiles</div><div class="ok">ok - all four device types exist with distinct engineering defaults</div><div class="">1) 以??댁뼱??wired)??媛源뚯씠 ?ъ슜 - ?ш퀬 ?먮졆???좏샇</div><div class="ok">ok - wired-close: breathing rate converges near the true rate</div><div class="">1b) ?뚭? ?뚯뒪?? ?뺤긽?곸씤 ?덉젙 ?명씉???곴뎄??"?좏샇 遺덉븞????媛뉙엳硫?????/div><div class="ok">ok - wired-close, calm regular breathing: reaches GOOD status, not stuck at UNSTABLE</div><div class="">2) 以??댁뼱?곗쓣 硫由??ъ슜 - ?쏀븳 ?좏샇</div><div class="ok">ok - wired-far: weak signal still normalizes and detects some breaths</div><div class="">3) 臾댁꽑 ?댁뼱??wireless) ?ъ슜</div><div class="ok">ok - wireless: uses the wireless profile and detects a plausible rate</div><div class="">4) ?ㅻ뱶??headset) ?ъ슜</div><div class="ok">ok - headset: uses the headset profile and detects a plausible rate</div><div class="">5) ?щ떇 以?留덉씠???꾩튂 蹂??/div><div class="ok">ok - running mic-position drift: does not crash and keeps producing a rate estimate</div><div class="">6) 諛쒖냼由?利앷?</div><div class="ok">ok - footsteps: classified as footstep artifact and do not inflate the breathing rate</div><div class="">7) 諛붾엺 ?뚮━ 利앷?</div><div class="ok">ok - wind: classified as an artifact and degrades status away from GOOD</div><div class="">8) 耳?대툝 ?붾뱾由?/div><div class="ok">ok - cable movement: classified as artifact, not confirmed as a breath</div><div class="">9) ?명씉 ?놁씠 二쇰? ?뚮━留??덈뒗 寃쎌슦</div><div class="ok">ok - ambient noise only, no breathing: Zone stays hidden</div><div class="">10) ?좏샇媛 5珥??댁긽 ?딄린??寃쎌슦</div><div class="ok">ok - signal dropout &gt;5s is detected and marks status UNAVAILABLE right after resuming</div><div class="">Zone gating</div><div class="ok">ok - canDisplayZone is false unless status is GOOD with enough confirmed events</div><div class="">Signal quality &amp; Calibration requirements</div><div class="ok">ok - calibrator computes and stores all 5 required metrics</div><div class="ok">ok - pushFrame rejects invalid values (null, undefined, NaN, Infinity, &lt;=0) safely</div><div class="ok">ok - STALE_EVENT_MS (9s) timeout marks status UNAVAILABLE and clears Zone</div><div class="">Validation-mode statistics</div><div class="ok">ok - computeAgreementStats matches hand-computed MAE/RMSE/bias/LoA on a known set</div><div class="ok">ok - computeValidationReport groups by activity/device/quality independently</div><div class="">
+18 passed, 0 failed</div></div>
+<script src="../breathing-engine.js"></script>
+<script src="./breathing-engine.tests.core.js"></script>
+<script>
+  var lines = [];
+  function log(line) { lines.push(line); }
+  var result = BreathingEngineTests.runAll(BreathingEngine, log);
+  document.getElementById('out').innerHTML = lines.map(function (l) {
+    var cls = l.indexOf('FAIL') === 0 ? 'fail' : (l.indexOf('ok -') === 0 ? 'ok' : '');
+    return '<div class="' + cls + '">' + l.replace(/</g, '&lt;') + '</div>';
+  }).join('');
+  console.log(lines.join('\n'));
+  window.__TEST_RESULT__ = result;
+</script>
+
+
+</body></html>

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "functions": {
+    "api/analyze-food.js": {
+      "maxDuration": 30
+    },
+    "api/nutrition-info.js": {
+      "maxDuration": 25
+    }
+  },
+  "rewrites": [
+    { "source": "/", "destination": "/index.html" }
+  ]
+}

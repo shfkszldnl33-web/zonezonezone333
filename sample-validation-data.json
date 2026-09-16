@@ -1,0 +1,10 @@
+[
+  { "predictedBpm": 15, "referenceBpm": 14, "activity": "resting", "deviceType": "wired", "quality": "GOOD" },
+  { "predictedBpm": 14, "referenceBpm": 15, "activity": "resting", "deviceType": "wired", "quality": "GOOD" },
+  { "predictedBpm": 22, "referenceBpm": 20, "activity": "walking", "deviceType": "wired", "quality": "GOOD" },
+  { "predictedBpm": 24, "referenceBpm": 21, "activity": "walking", "deviceType": "wireless", "quality": "MEASURING" },
+  { "predictedBpm": 30, "referenceBpm": 26, "activity": "running", "deviceType": "wired", "quality": "UNSTABLE" },
+  { "predictedBpm": 33, "referenceBpm": 28, "activity": "running", "deviceType": "wireless", "quality": "UNSTABLE" },
+  { "predictedBpm": 18, "referenceBpm": 17, "activity": "resting", "deviceType": "headset", "quality": "GOOD" },
+  { "predictedBpm": 27, "referenceBpm": 25, "activity": "running", "deviceType": "headset", "quality": "GOOD" }
+]
